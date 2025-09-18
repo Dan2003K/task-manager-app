@@ -15,11 +15,14 @@ A simple web-based task manager application built as part of a developer course.
 - **JavaScript (Vanilla)** for interactivity  
 
 ## 📂 Project Structure  
-task-manager/  
-│── index.html      # Main HTML file  
-│── style.css       # Stylesheet  
-│── script.js       # Application logic  
-│── README.md       # Project documentation  
+```plaintext
+task-manager /
+│── index.html
+│── style.css
+│── script.js 
+│── README.md
+```
+
 
 ## 📦 Getting Started  
 
