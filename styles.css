@@ -4,8 +4,85 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* App UI Styling */
+    --border-radius: 5px;
+    --gap: 10px;
+
+    /* Button Styling */
+    --button-padding: 2px 5px;
+
+    /* UI Colors */
+    --primary-color: ;
+    --secondary-color: ;
+    --border-color: oklab(50% 0 0);
+    --shadow-color: oklab(0% 0 0 / 0.5);
+
+    /* Font Colors */
+    --primary-font-color: ;
+    --secondary-font-color: ;
+}
+
 body {
     height: 100vh;
     width: 100%;
     padding: 10% 20%;
+}
+
+main {
+    padding: 5%;
+    border-radius: var(--border-radius);
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    grid-template-areas:
+        "h1 h1 h1"
+        "taskInput taskInput addTaskBtn"
+        "filterBtnContainer filterBtnContainer sortBtn"
+        "ul ul ul";
+    width: 100%;
+    gap: 10px;
+    box-shadow: 0 0 10px var(--shadow-color);
+}
+
+
+h1 {
+    grid-area: h1;
+    text-align: center;
+    margin: 0 0 10px;
+}
+
+#taskInput {
+    grid-area: taskInput;
+    padding: 5px;
+    width: auto;
+}
+
+#addTaskBtn {
+    grid-area: addTaskBtn;
+    padding: 5px;
+    width: auto;
+    padding: var(--button-padding);
+}
+
+#filterBtnContainer {
+    grid-area: filterBtnContainer;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+}
+
+#filterBtnContainer>button {
+    padding: var(--button-padding);
+}
+
+#sortBtn {
+    grid-area: sortBtn;
+    padding: var(--button-padding);
+}
+
+ul {
+    grid-area: ul;
+    width: 100%;
+    min-height: 25vh;
+    border: 1px dashed var(--border-color);
 }
