@@ -74,11 +74,16 @@ function renderTasks() {
         li.dataset.id = task.id;
 
         li.innerHTML = `
-            <input type='checkbox' ${task.completed ? 'checked' : ''}/>
-             <span class="taskName ${task.completed ? 'completed' : ''}">${task.text}</span>
+             <input type='checkbox' ${task.completed ? 'checked' : ''}/>
              <span class="taskDueDate">(${task.dueDate})</span>
-            <button class='deleteTaskBtn'>🗑️</button>
+             <button class='deleteTaskBtn'>🗑️</button>
         `;
+
+        // Set the task name safely
+        const spanName = document.createElement('span');
+        spanName.className = `taskName ${task.completed ? 'completed' : ''}`;
+        spanName.textContent = task.text;
+        li.insertBefore(spanName, li.querySelector('.taskDueDate'));
 
         // Toggle completion
         li.querySelector('input').addEventListener('change', () => {
