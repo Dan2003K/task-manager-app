@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="task manager, to-do list, productivity">
+    <meta name="description" content="A simple task manager app to track and organize your tasks.">
+
+    <meta property="og:title" content="Task Manager App">
+    <meta property="og:description" content="Keep track of your tasks and deadlines easily.">
+
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
@@ -11,16 +17,21 @@
 
 <body>
     <main>
-        <h1>Task Manager App</h1>
-        <input type="text" id="taskInput" placeholder="task">
+        <header id="appHeader">
+            <button id="themeToggleBtn"></button>
+            <h1>Task Manager App</h1>
+        </header>
+        <input type="text" id="taskInput" placeholder="Enter your task here...">
+        <input type="date" id="taskDateInput">
         <input type="button" id="addTaskBtn" value="Add Task">
-        <div id="filterBtnContainer">
-            <button>All</button>
-            <button>Completed</button>
-            <button>Active</button>
+        <div id="btnContainer">
+            <button id="allBtn">All</button>
+            <button id="completedBtn">Completed</button>
+            <button id="activeBtn">Active</button>
+            <button id="sortDateBtn">Sort By Due-Date</button>
         </div>
-        <button id="sortBtn">Sort By Due-Date</button>
-        <ul></ul>
+        <ul id="taskList">
+        </ul>
     </main>
 </body>
 
