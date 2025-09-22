@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Lexend:wght@100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -13,48 +15,112 @@
     --button-padding: 2px 5px;
 
     /* UI Colors */
-    --primary-color: ;
-    --secondary-color: ;
-    --border-color: oklab(50% 0 0);
-    --shadow-color: oklab(0% 0 0 / 0.5);
+    --primary-color: oklab(95% 0 0);
+    --secondary-color: oklab(100% 0 0);
+    --border-color: oklab(85% 0 0);
+    --shadow-color: oklab(0% 0 0 / 0.1);
+
+    /* UI Fonts */
+    --primary-font: "Figtree";
 
     /* Font Colors */
-    --primary-font-color: ;
-    --secondary-font-color: ;
+    --primary-font-color: oklab(20% 0 0);
+    --secondary-font-color: oklab(40% 0 0);
+
+    /* animation */
+    --theme-transition: all 200ms ease-in-out;
+}
+
+[data-theme="dark"] {
+    --primary-color: oklab(18% 0 0);
+    --secondary-color: oklab(25% 0 0);
+    --primary-font-color: oklab(95% 0 0);
+    --secondary-font-color: oklab(75% 0 0);
+    --border-color: oklab(40% 0 0);
+    --shadow-color: oklab(100% 0 0 / 0.05);
 }
 
 body {
     height: 100vh;
+    background: var(--primary-color);
+    color: var(--primary-font-color);
     width: 100%;
     padding: 10% 20%;
+    font-family: var(--primary-font);
+    transition: var(--theme-transition);
+}
+
+button,
+input {
+    outline: none;
 }
 
 main {
-    padding: 5%;
+    margin: 0 0 10vh 0;
+    padding: 2rem 2rem;
     border-radius: var(--border-radius);
     display: grid;
     grid-template-columns: 1fr 1fr auto;
     grid-template-areas:
-        "h1 h1 h1"
-        "taskInput taskInput addTaskBtn"
-        "filterBtnContainer filterBtnContainer sortBtn"
-        "ul ul ul";
+        "appHeader appHeader appHeader appHeader"
+        "taskInput taskInput taskDateInput addTaskBtn"
+        "btnContainer btnContainer btnContainer btnContainer"
+        "taskList taskList taskList taskList";
     width: 100%;
+    min-width: fit-content;
     gap: 10px;
     box-shadow: 0 0 10px var(--shadow-color);
+    transition: var(--theme-transition);
 }
 
+#appHeader {
+    grid-area: appHeader;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
 
 h1 {
-    grid-area: h1;
+    grid-area: appTitle;
     text-align: center;
     margin: 0 0 10px;
+    width: 100%;
+}
+
+#themeToggleBtn {
+    margin-right: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 1.2rem;
+    background: var(--secondary-color);
+    color: var(--primary-font-color);
+    cursor: pointer;
+    transition: var(--theme-transition);
 }
 
 #taskInput {
     grid-area: taskInput;
-    padding: 5px;
+    padding: 8px;
     width: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--secondary-color);
+    color: var(--primary-font-color);
+    transition: var(--theme-transition);
+}
+
+#taskDateInput {
+    grid-area: taskDateInput;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--secondary-color);
+    color: var(--primary-font-color);
+    transition: var(--theme-transition);
 }
 
 #addTaskBtn {
@@ -62,27 +128,96 @@ h1 {
     padding: 5px;
     width: auto;
     padding: var(--button-padding);
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--primary-font-color);
+    transition: var(--theme-transition);
 }
 
-#filterBtnContainer {
-    grid-area: filterBtnContainer;
+#addTaskBtn:hover {
+    transform: translateY(-2px);
+    background-color: oklab(65.42% -0.15272 0.11501);
+    border: 1px solid var(--border-color);
+}
+
+#btnContainer {
+    grid-area: btnContainer;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap-reverse;
     gap: var(--gap);
 }
 
-#filterBtnContainer>button {
+#btnContainer>button {
     padding: var(--button-padding);
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--primary-font-color);
+    transition: var(--theme-transition);
 }
 
-#sortBtn {
+#btnContainer>button:hover {
+    transform: translateY(2px);
+}
+
+#sortDateBtn {
+    margin-left: auto;
     grid-area: sortBtn;
     padding: var(--button-padding);
 }
 
 ul {
-    grid-area: ul;
+    grid-area: taskList;
     width: 100%;
     min-height: 25vh;
     border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 6px;
+    gap: 6px;
+    transition: var(--theme-transition);
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    transition: var(--theme-transition);
+    padding: 6px 12px;
+    width: 100%;
+}
+
+.taskName {
+    margin: 0 0 0 12px;
+    flex-grow: 1;
+}
+
+.taskName.completed {
+    text-decoration: line-through;
+    color: var(--secondary-font-color);
+    transition: var(--theme-transition);
+}
+
+.taskDueDate {
+    margin: 0 12px 0 auto;
+    font-size: 0.85rem;
+    color: var(--secondary-font-color);
+    transition: var(--theme-transition);
+}
+
+.deleteTaskBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--secondary-font-color);
 }
