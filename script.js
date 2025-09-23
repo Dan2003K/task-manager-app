@@ -52,6 +52,46 @@ function sortTasks(tasks) {
     return tasks.slice().sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 }
 
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+
+/// FETCH TASKS FROM API
+async function fetchInitialTasks() {
+    try {
+        if (getTasks().length > 0) return;
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch tasks from API");
+        }
+
+        const data = await response.json();
+
+        // Convert API tasks into our format
+        const tasks = data.map(item => ({
+            id: generateId(),
+            text: item.title,
+            dueDate: new Date().toISOString().split('T')[0],
+            completed: item.completed
+        }));
+
+
+        // MERGE WITH EXISTING TASKS
+        const existingTasks = getTasks();
+        const mergedTasks = [...existingTasks, ...tasks];
+
+        saveTasks(mergedTasks);
+        renderTasks();
+
+    } catch (error) {
+        console.error("Error Fetching Tasks", error);
+    }
+}
+
+
+
 
 /// RENDER TASKS TO DOM
 /// ----------------------------
@@ -75,15 +115,17 @@ function renderTasks() {
 
         li.innerHTML = `
              <input type='checkbox' ${task.completed ? 'checked' : ''}/>
+             <section id="dateDelContainer">
              <span class="taskDueDate">(${task.dueDate})</span>
              <button class='deleteTaskBtn'>🗑️</button>
+             </section>
         `;
 
         // Set the task name safely
         const spanName = document.createElement('span');
         spanName.className = `taskName ${task.completed ? 'completed' : ''}`;
         spanName.textContent = task.text;
-        li.insertBefore(spanName, li.querySelector('.taskDueDate'));
+        li.insertBefore(spanName, li.querySelector('#dateDelContainer'));
 
         // Toggle completion
         li.querySelector('input').addEventListener('change', () => {
@@ -124,11 +166,12 @@ function addTask() {
     // Create Task Object
     const tasks = getTasks();
     const task = {
-        id: Date.now(),
+        id: generateId(),
         text: text,
         dueDate: dueDate,
         completed: false
     };
+
 
     tasks.push(task);
     saveTasks(tasks);
@@ -152,6 +195,9 @@ function updateThemeIcon(theme) {
     themeToggleBtn.textContent = theme === 'light' ? '🌙' : '🌞';
 }
 
+//  Set theme icon on first load
+updateThemeIcon(savedTheme);
+
 // Toggle theme on click
 themeToggleBtn.addEventListener('click', () => {
     const currentTheme = document.body.getAttribute('data-theme');
@@ -166,6 +212,7 @@ themeToggleBtn.addEventListener('click', () => {
 /// INITIALIZE THE APP
 /// ----------------------------
 renderTasks();
+fetchInitialTasks();
 
 addTaskBtn.addEventListener('click', addTask);
 
