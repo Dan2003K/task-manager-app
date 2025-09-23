@@ -32,8 +32,8 @@
 }
 
 [data-theme="dark"] {
-    --primary-color: oklab(18% 0 0);
-    --secondary-color: oklab(25% 0 0);
+    --primary-color: oklab(25% -0.00217 -0.00849);
+    --secondary-color: oklab(35% -0.00217 -0.00849);
     --primary-font-color: oklab(95% 0 0);
     --secondary-font-color: oklab(75% 0 0);
     --border-color: oklab(40% 0 0);
@@ -45,7 +45,7 @@ body {
     background: var(--primary-color);
     color: var(--primary-font-color);
     width: 100%;
-    padding: 10% 20%;
+    padding: 10% 15%;
     font-family: var(--primary-font);
     transition: var(--theme-transition);
 }
@@ -185,20 +185,19 @@ ul {
 ul li {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
     list-style: none;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     background: var(--primary-color);
-    transition: var(--theme-transition);
     padding: 6px 12px;
     width: 100%;
+    gap: 12px;
 }
 
 .taskName {
     margin: 0 0 0 12px;
-    flex-grow: 1;
+    flex: 1 1 auto;
+    word-break: break-word;
 }
 
 .taskName.completed {
@@ -222,15 +221,25 @@ ul li {
     color: var(--secondary-font-color);
 }
 
+#dateDelContainer {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
 
 
+@media (max-width: 1500px) {
+
+    body {
+        padding: 10% 10%;
+    }
+
+}
 
 @media (max-width: 1000px) {
 
     body {
         padding: 10% 5%;
     }
-
-
 
 }
