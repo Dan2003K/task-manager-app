@@ -141,6 +141,11 @@ h1 {
     border: 1px solid var(--border-color);
 }
 
+#addTaskBtn:active {
+    transform: translateY(-2px);
+    background-color: oklab(73.89% -0.14914 0.11064);
+}
+
 #btnContainer {
     grid-area: btnContainer;
     display: flex;
@@ -160,6 +165,11 @@ h1 {
 
 #btnContainer>button:hover {
     transform: translateY(2px);
+}
+
+#btnContainer>button:active {
+    transform: translateY(2px);
+    background-color: var(--secondary-color);
 }
 
 #sortDateBtn {
@@ -192,6 +202,7 @@ ul li {
     padding: 6px 12px;
     width: 100%;
     gap: 12px;
+    transition: var(--theme-transition);
 }
 
 .taskName {
