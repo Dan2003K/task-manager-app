@@ -12,6 +12,8 @@ const sortDateBtn = document.querySelector('#sortDateBtn');
 
 const themeToggleBtn = document.querySelector('#themeToggleBtn');
 
+
+
 /// STATE
 /// ----------------------------
 let currentFilter = 'all';
@@ -19,37 +21,45 @@ let sortByDate = false;
 
 
 
+/// GLOBAL TASKS ARRAY
+/// ----------------------------
+let tasks = getTasks();
+
+
+
 /// GET & SAVE TASKS (LOCAL STORAGE UTILITIES)
 /// ----------------------------
 function getTasks() {
-    const tasks = localStorage.getItem('tasks');
-    return tasks ? JSON.parse(tasks) : [];
+    const storedTasks = localStorage.getItem('tasks');
+    return storedTasks ? JSON.parse(storedTasks) : [];
 }
-function saveTasks(tasks) {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+
+function saveTasks(tasksArray) {
+    localStorage.setItem('tasks', JSON.stringify(tasksArray));
 }
 
 
 
 /// FILTER & SORT
 /// ----------------------------
-function filterTasks(tasks, filter) {
+function filterTasks(tasksArray, filter) {
     switch (filter) {
         case 'all':
-            return tasks;
+            return tasksArray;
 
         case 'completed':
-            return tasks.filter(task => task.completed === true);
+            return tasksArray.filter(task => task.completed === true);
 
         case 'active':
-            return tasks.filter(task => task.completed === false);
+            return tasksArray.filter(task => task.completed === false);
 
         default:
-            return tasks;
+            return tasksArray;
     }
 }
-function sortTasks(tasks) {
-    return tasks.slice().sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+function sortTasks(tasksArray) {
+    return tasksArray.slice().sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 }
 
 function generateId() {
@@ -57,10 +67,12 @@ function generateId() {
 }
 
 
+
 /// FETCH TASKS FROM API
+/// ------------------------------
 async function fetchInitialTasks() {
     try {
-        if (getTasks().length > 0) return;
+        if (tasks.length > 0) return;
         const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
 
         if (!response.ok) {
@@ -69,20 +81,17 @@ async function fetchInitialTasks() {
 
         const data = await response.json();
 
-        // Convert API tasks into our format
-        const tasks = data.map(item => ({
+        // Convert API tasks into in-app format
+        const apiTasks = data.map(item => ({
             id: generateId(),
             text: item.title,
             dueDate: new Date().toISOString().split('T')[0],
             completed: item.completed
         }));
 
-
-        // MERGE WITH EXISTING TASKS
-        const existingTasks = getTasks();
-        const mergedTasks = [...existingTasks, ...tasks];
-
-        saveTasks(mergedTasks);
+        // Merge with existing tasks
+        tasks = [...tasks, ...apiTasks];
+        saveTasks(tasks);
         renderTasks();
 
     } catch (error) {
@@ -92,23 +101,18 @@ async function fetchInitialTasks() {
 
 
 
-
 /// RENDER TASKS TO DOM
 /// ----------------------------
 function renderTasks() {
-    let tasks = getTasks();
+    let visibleTasks = filterTasks(tasks, currentFilter);
 
-    // Apply filter
-    tasks = filterTasks(tasks, currentFilter);
-
-    // Apply sorting
     if (sortByDate) {
-        tasks = sortTasks(tasks);
+        visibleTasks = sortTasks(visibleTasks);
     }
 
     taskList.innerHTML = '';
 
-    tasks.forEach(task => {
+    visibleTasks.forEach(task => {
         const li = document.createElement('li');
         li.classList.add('taskItem');
         li.dataset.id = task.id;
@@ -121,7 +125,6 @@ function renderTasks() {
              </section>
         `;
 
-        // Set the task name safely
         const spanName = document.createElement('span');
         spanName.className = `taskName ${task.completed ? 'completed' : ''}`;
         spanName.textContent = task.text;
@@ -129,7 +132,6 @@ function renderTasks() {
 
         // Toggle completion
         li.querySelector('input').addEventListener('change', () => {
-            const tasks = getTasks();
             const index = tasks.findIndex(t => t.id === task.id);
             tasks[index].completed = !tasks[index].completed;
             saveTasks(tasks);
@@ -138,11 +140,10 @@ function renderTasks() {
 
         // Delete task
         li.querySelector('.deleteTaskBtn').addEventListener('click', () => {
-            let tasks = getTasks();
             tasks = tasks.filter(t => t.id !== task.id);
             saveTasks(tasks);
             renderTasks();
-        })
+        });
 
         taskList.appendChild(li);
     });
@@ -153,18 +154,14 @@ function renderTasks() {
 /// ADD TASK
 /// ----------------------------
 function addTask() {
-    // Get values from inputs
     const text = taskInput.value.trim();
     const dueDate = taskDateInput.value;
 
-    // Validate Values
     if (!text || !dueDate) {
         alert('Please Enter a Task and a Date!');
         return;
     }
 
-    // Create Task Object
-    const tasks = getTasks();
     const task = {
         id: generateId(),
         text: text,
@@ -172,12 +169,10 @@ function addTask() {
         completed: false
     };
 
-
     tasks.push(task);
     saveTasks(tasks);
     renderTasks();
 
-    // Clear Input Fields
     taskInput.value = "";
     taskDateInput.value = "";
 }
@@ -186,19 +181,15 @@ function addTask() {
 
 /// TOGGLE THEMES
 /// ----------------------------
-// Load theme from local storage
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.body.setAttribute('data-theme', savedTheme);
 
-// Update Theme Button Icon
 function updateThemeIcon(theme) {
     themeToggleBtn.textContent = theme === 'light' ? '🌙' : '🌞';
 }
 
-//  Set theme icon on first load
 updateThemeIcon(savedTheme);
 
-// Toggle theme on click
 themeToggleBtn.addEventListener('click', () => {
     const currentTheme = document.body.getAttribute('data-theme');
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -220,10 +211,12 @@ allBtn.addEventListener('click', () => {
     currentFilter = 'all';
     renderTasks();
 });
+
 completedBtn.addEventListener('click', () => {
     currentFilter = 'completed';
     renderTasks();
 });
+
 activeBtn.addEventListener('click', () => {
     currentFilter = 'active';
     renderTasks();
@@ -233,5 +226,3 @@ sortDateBtn.addEventListener('click', () => {
     sortByDate = !sortByDate;
     renderTasks();
 });
-
-
